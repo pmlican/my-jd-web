@@ -32,7 +32,7 @@ export default {
 <style lang="scss" scoped>
 @import '@css/style.scss';
   .main {
-    // position: absolute;
+    position: absolute;
     width: 100%;
     height: 100%;
     display: flex;

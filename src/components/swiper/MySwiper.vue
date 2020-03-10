@@ -31,6 +31,11 @@ export default {
       default: function () {
         return []
       }
+    },
+    // 新增分页器样式
+    paginationType: {
+      type: String,
+      default: '1'
     }
   },
   data: function () {
@@ -45,6 +50,31 @@ export default {
           // 绑定类名，修改样式,原始样式为蓝色，灰底
           bulletClass: 'custom-bullet-class'
         }
+      }
+    }
+  },
+  created: function () {
+    this.initPaginationLayout()
+  },
+  methods: {
+    initPaginationLayout: function () {
+      switch (this.paginationType) {
+        case '1':
+          this.swiperOptions.pagination = {
+            // 绑定对应的html元素
+            el: '.swiper-pagination',
+            type: 'bullets',
+            // 绑定类名，修改样式,原始样式为蓝色，灰底
+            bulletClass: 'custom-bullet-class'
+          }
+          break
+
+        case '2':
+          this.swiperOptions.pagination = {
+            el: '.swiper-pagination',
+            type: 'fraction'
+          }
+          break
       }
     }
   }
@@ -72,6 +102,24 @@ export default {
         .swiper-pagination-bullet-active {
             background: white;
         }
+    }
+    // 数字分页器样式
+    .swiper-pagination-fraction {
+      left: auto;
+      right: 0;
+      width: auto;
+      font-size: $infoSize;
+      background-color: rgba(0, 0, 0, 0.3);
+      padding: px2rem(6) px2rem(16);
+      bottom: px2rem(32);
+      color: white;
+      border-top-left-radius: px2rem(16);
+      border-bottom-left-radius: px2rem(16);
+      //当前页码样式
+      .swiper-pagination-current {
+        font-size: $titleSize;
+        font-weight: bold;
+      }
     }
 
 </style>
