@@ -30,7 +30,7 @@
             </ul>
         </div>
         <!-- 立即购买 -->
-        <div class="pay page-commit">
+        <div class="pay page-commit" @click="onPayClick">
             立即购买
         </div>
     </div>
@@ -87,6 +87,26 @@ export default {
     },
     onPaymentItemClick: function (item) {
       this.selectPayment = item
+    },
+    onPayClick: function () {
+      if (this.selectPayment.id === '1') {
+        // 支付宝支付
+        this.aliPay()
+      } else if (this.selectPayment.id === '2') {
+        // 微信支付
+        this.wxPay()
+      }
+    },
+    aliPay: function () {
+      if (window.androidJSBridge) {
+        // 这里不处理回调，原生支付返回，停留在原页面
+        window.androidJSBridge.aliPay(JSON.stringify(this.goodsData))
+      }
+    },
+    wxPay: function () {
+      if (window.androidJSBridge) {
+        window.wxPay(JSON.stringify(this.goodsData))
+      }
     }
   }
 }
