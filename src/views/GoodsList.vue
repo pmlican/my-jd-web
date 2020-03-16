@@ -5,8 +5,8 @@
             <img :src="layoutType.icon" @click="onChangeLayoutType()" alt="">
           </template>
         </navigation-bar>
-        <div class="goods-list-page-content">
-          <!-- 监听回调 -->
+        <div class="goods-list-page-content" :class="{'iphonex-bottom': $store.state.isIphoneX}">
+            <!-- 监听回调 -->
             <goods-options @optionsChange="onGoodsOptionsChange"></goods-options>
             <goods :layoutType="layoutType.type" :sort="sortType"></goods>
         </div>
@@ -18,6 +18,7 @@ import NavigationBar from '@c/currency/NavigationBar.vue'
 import GoodsOptions from '@c/goods/GoodsOptions.vue'
 import Goods from '@c/goods/Goods.vue'
 export default {
+  name: 'goodsList',
   components: {
     NavigationBar,
     GoodsOptions,

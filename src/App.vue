@@ -1,7 +1,10 @@
 <template>
   <div id="app">
     <transition :name="transitionName">
-      <router-view/>
+      <!-- 所有通过router-view加载的页面组件都会被缓存 -->
+      <keep-alive :include="virtualTaskStack">
+        <router-view/>
+      </keep-alive>
     </transition>
   </div>
 </template>
@@ -9,7 +12,22 @@
 export default {
   data: function () {
     return {
-      transitionName: 'fold-left'
+      transitionName: 'fold-left',
+      virtualTaskStack: [
+        // 默认加入main
+        'imooc'
+      ]
+    }
+  },
+  created: function () {
+    // 在App.vue created设置是否为IphoneX
+    this.$store.commit('setIsIphoneX', window.isIphoneX)
+    // 原生app启动会调用这个方法，用于自动登录
+    window.nativeFunctionUserLogin = this.nativeFunctionUserLogin
+  },
+  methods: {
+    nativeFunctionUserLogin: function (username) {
+      this.$store.commit('setUsername', username)
     }
   },
   watch: {
@@ -18,8 +36,18 @@ export default {
       const routerType = to.params.routerType
       if (routerType === 'push') {
         this.transitionName = 'fold-left'
+        // 当push时加入栈
+        this.virtualTaskStack.push(to.name)
       } else {
         this.transitionName = 'fold-right'
+        // 当pop时弹出栈
+        this.virtualTaskStack.pop()
+      }
+      // 还原虚拟任务栈为初始状态
+      if (to.params.clearTask) {
+        this.virtualTaskStack = [
+          'imooc'
+        ]
       }
     }
   }

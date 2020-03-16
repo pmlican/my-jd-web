@@ -1,5 +1,5 @@
 <template>
-    <div class="home" @scroll="onScrollChange">
+    <div class="home" @scroll="onScrollChange" ref="home">
         <navigation-bar :isShowBack="false" :navBarStyle="navBarStyle">
         <!-- 左侧插槽 -->
         <template v-slot:nav-left>
@@ -59,7 +59,8 @@ export default {
     return {
       swiperData: [],
       activityDatas: [],
-      swiperHeight: '184px',
+      // 如果是iPhoneX，轮播图高度增加44px
+      swiperHeight: this.$store.state.isIphoneX ? '228px' : '184px',
       secondsData: [],
       // navBar的定制样式
       navBarStyle: {
@@ -148,6 +149,11 @@ export default {
     this.navBarCurrentSlotStyle = this.navBarSlotStyle.normal
     // 调用initData方法加载数据
     this.initData()
+  },
+  // keepAlive组件被激活的时候调用
+  // 为这个模块指定滑动距离
+  activated: function () {
+    this.$refs.home.scrollTop = this.scrollTopValue
   }
 }
 </script>
@@ -155,7 +161,7 @@ export default {
 <style lang="scss" scoped>
 @import '@css/style.scss';
     .home {
-        position: absolute;
+        // position: absolute;
         width: 100%;
         height: 100%;
         background-color: $bgColor;

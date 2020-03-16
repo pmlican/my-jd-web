@@ -1,6 +1,6 @@
 <template>
     <!-- 当pageName有值时展示分割线 -->
-    <div class="nav-bar z-index-max" :style="navBarStyle" :class="{'bottom-line' : pageName}">
+    <div class="nav-bar z-index-max" :style="navBarStyle" :class="[{'bottom-line' : pageName},{'iphonex-top': $store.state.isIphoneX}]">
         <div class="left" @click="$emit('onLeftClick')">
             <img src="@img/back.svg" v-if="isShowBack" alt="">
             <!-- 具名插槽 -->
@@ -50,6 +50,8 @@ export default {
     line-height: px2rem(44);
     display: flex;
     justify-content: space-between;
+    // 适配沉浸式手机 statusBar
+    padding-top: $statusBarHeight;
     .left, .right {
         display: flex;
         height: 100%;

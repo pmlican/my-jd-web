@@ -14,11 +14,10 @@
         <div class="goods-detail-content">
             <!-- 监听滚动事件放到这里 -->
             <parallax @onScrollChange="onScrollChange">
-              <!-- 缓慢移动区 -->
+                <!-- 缓慢移动区 -->
               <template v-slot:parallax-slow>
-            <!-- 轮播图 -->
-                <my-swiper :height="SWIPER_IMAGE_HEIGHT + 'px'" :swiperImgs="goodsData.swiperImgs" :paginationType="'2'">
-                </my-swiper>
+                <!-- 轮播图 -->
+                <my-swiper :height="SWIPER_IMAGE_HEIGHT + 'px'" :swiperImgs="goodsData.swiperImgs" :paginationType="'2'"></my-swiper>
               </template>
               <!-- 正常移动区 -->
               <template>
@@ -61,9 +60,9 @@
             </parallax>
         </div>
           <!-- 购买工具条 -->
-        <div class="goods-detail-buy">
-          <div class="goods-detail-buy-add">加入购物车</div>
-          <div class="goods-detail-buy-now">立即购买</div>
+        <div class="goods-detail-buy" :class="{'iphonex-bottom': $store.state.isIphoneX}">
+          <div class="goods-detail-buy-add" @click="onAddGoodsClick()">加入购物车</div>
+          <div class="goods-detail-buy-now" @click="onBuyClick()">立即购买</div>
         </div>
     </div>
 </template>
@@ -74,6 +73,7 @@ import MySwiper from '@c/swiper/MySwiper.vue'
 import Direct from '@c/goods/Direct'
 import Parallax from '@c/parallax/Parallax'
 export default {
+  name: 'goodsDetail',
   components: {
     NavigationBar,
     MySwiper,
@@ -105,12 +105,55 @@ export default {
     // 监听内容滚动
     onScrollChange: function (scrollTop) {
       this.scrollValue = scrollTop
+    },
+    onBuyClick: function () {
+      this.$router.push({
+        name: 'buy',
+        params: {
+          routerType: 'push'
+        },
+        query: {
+          goodsId: this.goodsData.id
+        }
+      })
+    },
+    onAddGoodsClick: function () {
+      // 保存商品到购物车数据中
+      this.$store.commit('addShoppingData', this.goodsData)
+      // 弹窗添加成功
+      alert('添加成功')
+      // 跳转到 main页面，然后控制tabar切换到购物车
+      this.$router.push({
+        name: 'imooc',
+        params: {
+          routerType: 'push',
+          // 自定义标记，表示切换到tabar index为1
+          componentIndex: 1,
+          // 清空虚拟任务栈
+          clearTask: true
+        }
+      })
+    },
+    loadGoodsData: function () {
+      this.$http.get('/goodsDetail', {
+        params: {
+        // 通过url获取id，发起请求
+          goodsId: this.$route.query.goodsId
+        }
+      }).then(data => {
+        this.goodsData = data.goodsData
+      })
     }
   },
   created: function () {
     // console.log(this.$route.params.goods)
     // 注意这里是用 route 不是router
-    this.goodsData = this.$route.params.goods
+    // this.goodsData = this.$route.params.goods
+    /*
+      当刷新页面是，vueRouter 里面的params数据会被重置
+      这时候我们拿到的goods === undefined
+    */
+    this.loadGoodsData()
   },
   computed: {
     // 计算属性
@@ -161,8 +204,9 @@ export default {
     color: white;
   }
   &-content {
+    // 这个要表示超过屏幕的隐藏
+    overflow: hidden;
     // 这里不需要滚动
-    // overflow: hidden;
     // overflow-y: auto;
     height: 100%;
 

@@ -1,5 +1,5 @@
 <template>
-    <div class="tool-bar">
+    <div class="tool-bar" :class="{'iphonex-bottom': $store.state.isIphoneX}">
        <!-- barItem点击事件 -->
         <div class="tool-bar-item" v-for="(item,index) in toolBarData" :key="index" @click="onChangeFragment(item, index)">
         <img class="tool-bar-item-img" :src="[index === selectItemIndex ? item.hIcon : item.nIcon]" alt="altText"/>
@@ -45,6 +45,11 @@ export default {
       this.selectItemIndex = index
       // 回调到父组件
       this.$emit('onChangeFragment', item.componentName)
+    },
+    // 切换页面方法
+    pushFragment: function (index) {
+      // 调用这个方法回调
+      this.onChangeFragment(this.toolBarData[index], index)
     }
   }
 

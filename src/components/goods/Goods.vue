@@ -7,7 +7,7 @@
         3、计算 item 的位置，来达到 从上到下，从左到右依次排列的目的
      -->
     <!-- 新增一个类名能否滚动 -->
-    <div class="goods" :class="[layoutClass, {'goods-scroll' : isScroll}]" :style="{height: goodsViewHeight}">
+    <div class="goods" :class="[layoutClass, {'goods-scroll' : isScroll}]" :style="{height: goodsViewHeight}" ref="goods" @scroll="onScrollChange">
       <div class="goods-item" :class="layoutItemClass" @click="onItemClick(item)" ref="goodsItem" :style="goodsItemStyles[index]" v-for="(item, index) in sortGoodsData" :key="index">
           <!-- 图片 -->
           <img class="goods-item-img" :src="item.img" alt="" :style="imgStyles[index]">
@@ -73,13 +73,21 @@ export default {
       // 布局类名 默认为垂直布局
       // 1.垂直列表（goods-list） 2. 网格布局（goods-grid） 3. 瀑布流布局（goods-waterfall）
       layoutClass: 'goods-list',
-      layoutItemClass: 'goods-list-item'
+      layoutItemClass: 'goods-list-item',
+      scrollTopValue: 0
     }
   },
   created: function () {
     this.initData()
   },
+  activated: function () {
+    // 定位活动距离
+    this.$refs.goods.scrollTop = this.scrollTopValue
+  },
   methods: {
+    onScrollChange: function ($event) {
+      this.scrollTopValue = $event.target.scrollTop
+    },
     initData: function () {
       this.$http.get('goods').then(data => {
         // console.log(data)
@@ -147,8 +155,12 @@ export default {
       this.$router.push({
         name: 'goodsDetail',
         params: {
-          goods: item,
+          // goods: item,
           routerType: 'push'
+        },
+        // 把传递的数据拼接到URL
+        query: {
+          goodsId: item.id
         }
       })
     },
@@ -237,6 +249,7 @@ export default {
 @import '@css/style.scss';
 .goods {
     background-color: $bgColor;
+    // 是否允许滑动
     &-scroll {
       overflow: hidden;
       overflow-y: auto;

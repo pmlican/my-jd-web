@@ -7,7 +7,7 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'Main',
+    name: 'imooc',
     component: Main
   },
   {
@@ -22,6 +22,24 @@ const routes = [
     name: 'goodsDetail',
     // 异步加载组件
     component: () => import('../views/GoodsDetail.vue')
+  },
+  {
+    path: '/buy',
+    name: 'buy',
+    // 异步加载组件
+    component: () => import('../views/Buy.vue')
+  },
+  {
+    path: '/login',
+    name: 'login',
+    // 异步加载组件
+    component: () => import('../views/Login.vue')
+  },
+  {
+    path: '/register',
+    name: 'register',
+    // 异步加载组件
+    component: () => import('../views/Register.vue')
   }
 ]
 

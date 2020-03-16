@@ -8,6 +8,8 @@ import '@js/htmlFontSize.js'
 import '@js/axios.config.js'
 // 过滤器
 import '@js/filters.js'
+// iPhoneX判断函数
+import '@js/IsIphoneX.js'
 
 Vue.config.productionTip = false
 
